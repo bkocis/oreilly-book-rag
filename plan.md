@@ -31,27 +31,27 @@ oreilly-rag/
 
 ## Phase 1: Environment Setup and Dependencies (Steps 1-3)
 
-### Step 1: Backend Environment Setup
-- [ ] Create `backend/` directory
-- [ ] Create `requirements.txt` with dependencies:
+### Step 1: Backend Environment Setup ✅ COMPLETED
+- [x] Create `backend/` directory
+- [x] Create `requirements.txt` with dependencies:
   - FastAPI (for API framework)
   - Uvicorn (ASGI server)
   - LlamaIndex (for document processing and RAG)
   - PyPDF2 or pypdf (for PDF parsing)
   - SentenceTransformers (for embeddings)
-  - ChromaDB or FAISS (for vector storage)
+  - Qdrant (for vector storage) - *Updated from ChromaDB*
   - Pydantic (for data validation)
   - Python-multipart (for file uploads)
   - CORS middleware
   - SQLAlchemy (for quiz and user data)
   - Alembic (for database migrations)
-- [ ] Create virtual environment and install dependencies
-- [ ] Create basic FastAPI app structure
+- [x] Create virtual environment and install dependencies
+- [x] Create basic FastAPI app structure
 
-### Step 2: Frontend Environment Setup
-- [ ] Create `frontend/` directory
-- [ ] Initialize React app with Vite
-- [ ] Install dependencies:
+### Step 2: Frontend Environment Setup ✅ COMPLETED
+- [x] Create `frontend/` directory
+- [x] Initialize React app with Vite
+- [x] Install dependencies:
   - React
   - Axios (for API calls)
   - React Router (for navigation)
@@ -60,7 +60,7 @@ oreilly-rag/
   - React Hook Form (for forms)
   - Framer Motion (for animations)
   - React Icons
-- [ ] Set up basic project structure
+- [x] Set up basic project structure
 
 ### Step 3: Configuration Setup
 - [ ] Create `config.py` for backend configuration
