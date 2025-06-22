@@ -80,14 +80,17 @@ oreilly-rag/
 - [x] Create chunking strategy optimized for quiz generation
 - [x] Extract key concepts, definitions, and examples
 
-### Step 5: Document Indexing Service
-- [ ] Create `services/indexing_service.py`
-- [ ] Implement LlamaIndex document loading
-- [ ] Set up embedding model (SentenceTransformers)
-- [ ] Configure vector store (ChromaDB or FAISS)
-- [ ] Implement document indexing pipeline
-- [ ] Add progress tracking for large documents
-- [ ] Index by topic, difficulty level, and concept type
+### Step 5: Document Indexing Service ✅ COMPLETED
+- [x] Create `services/indexing_service.py`
+- [x] Implement LlamaIndex document loading
+- [x] Set up embedding model (HuggingFace BGE-small-en-v1.5)
+- [x] Configure vector store (Qdrant)
+- [x] Implement document indexing pipeline
+- [x] Add batch processing for multiple documents
+- [x] Index by topic extraction and metadata
+- [x] Integrate with document parser service
+- [x] Add search functionality with similarity scoring
+- [x] Implement document management (delete, clear index)
 
 ### Step 6: Vector Database Setup
 - [ ] Create `services/vector_store.py`
