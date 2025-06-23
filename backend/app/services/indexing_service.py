@@ -133,63 +133,62 @@ class DocumentIndexingService:
             logger.info("Starting document indexing", file_path=file_path)
             
             # Parse document
-            parsed_doc = await self.document_parser.parse_document(file_path)
+            parsed_doc = self.document_parser.parse_pdf(file_path)
             
-            if not parsed_doc or not parsed_doc.get('content'):
+            if not parsed_doc:
                 raise ValueError("Document parsing failed or returned empty content")
             
-            # Prepare document metadata
+            # Prepare document metadata  
             doc_metadata = {
                 'file_path': file_path,
                 'file_name': Path(file_path).name,
                 'indexed_at': datetime.utcnow().isoformat(),
-                'total_pages': parsed_doc.get('total_pages', 0),
-                'file_size': parsed_doc.get('file_size', 0),
+                'total_pages': parsed_doc.metadata.pages,
+                'file_size': parsed_doc.metadata.file_size,
+                'title': parsed_doc.metadata.title,
+                'author': parsed_doc.metadata.author,
+                'total_chunks': parsed_doc.total_chunks,
+                'key_concepts': parsed_doc.key_concepts,
                 **(metadata or {})
             }
             
-            # Create LlamaIndex documents
+            # Create LlamaIndex documents from chunks
             documents = []
             
-            # Add full document
-            full_doc = Document(
-                text=parsed_doc['content'],
-                metadata={
-                    **doc_metadata,
-                    'content_type': 'full_document',
-                    'page_range': f"1-{parsed_doc.get('total_pages', 'unknown')}"
-                }
-            )
-            documents.append(full_doc)
-            
-            # Add page-level documents if available
-            if 'pages' in parsed_doc:
-                for page_num, page_content in parsed_doc['pages'].items():
-                    if page_content.strip():
-                        page_doc = Document(
-                            text=page_content,
-                            metadata={
-                                **doc_metadata,
-                                'content_type': 'page',
-                                'page_number': int(page_num),
-                                'page_range': str(page_num)
-                            }
-                        )
-                        documents.append(page_doc)
+            # Add chunk-based documents
+            for chunk in parsed_doc.chunks:
+                chunk_doc = Document(
+                    text=chunk.content,
+                    metadata={
+                        **doc_metadata,
+                        'content_type': 'chunk',
+                        'chunk_id': chunk.chunk_id,
+                        'page_number': chunk.page_number,
+                        'chunk_index': chunk.chunk_index,
+                        'chunk_type': chunk.chunk_type,
+                        'word_count': chunk.word_count,
+                        'concept_keywords': chunk.concept_keywords,
+                        'is_definition': chunk.is_definition,
+                        'is_example': chunk.is_example,
+                        'is_code_snippet': chunk.is_code_snippet
+                    }
+                )
+                documents.append(chunk_doc)
             
             # Index documents
             for doc in documents:
                 self.index.insert(doc)
             
-            # Extract topics and concepts
-            topics = await self._extract_topics(parsed_doc['content'])
+            # Extract topics and concepts (use the already extracted key concepts)
+            topics = await self._extract_topics(' '.join([chunk.content for chunk in parsed_doc.chunks[:10]]))
             
             result = {
                 'success': True,
                 'file_path': file_path,
                 'documents_indexed': len(documents),
-                'total_pages': parsed_doc.get('total_pages', 0),
-                'content_length': len(parsed_doc['content']),
+                'total_pages': parsed_doc.metadata.pages,
+                'total_chunks': parsed_doc.total_chunks,
+                'key_concepts_count': len(parsed_doc.key_concepts),
                 'topics': topics,
                 'indexed_at': doc_metadata['indexed_at']
             }

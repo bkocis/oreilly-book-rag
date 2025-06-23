@@ -71,8 +71,10 @@ async def health_check():
     return {"status": "healthy", "version": __version__}
 
 
-# Include API routers (will be added as we build them)
-# app.include_router(documents.router, prefix="/api/v1/documents", tags=["documents"])
+# Include API routers
+from app.api import documents
+
+app.include_router(documents.router, prefix="/api/v1/documents", tags=["documents"])
 # app.include_router(quizzes.router, prefix="/api/v1/quizzes", tags=["quizzes"])
 # app.include_router(learning.router, prefix="/api/v1/learning", tags=["learning"])
 # app.include_router(users.router, prefix="/api/v1/users", tags=["users"])
