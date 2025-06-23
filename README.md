@@ -1,5 +1,8 @@
 # O'Reilly Book RAG - Interactive Learning Platform
 
+[![Build in Public](https://img.shields.io/badge/Build%20in%20Public-🚀-blue.svg)](https://buildinpublic.xyz/)
+[![Built with Cursor](https://img.shields.io/badge/Built%20with-Cursor-blueviolet.svg)](https://cursor.sh/)
+
 Learn from your PDF books - build quizzes, Q&A, and chat for learning from your books.
 
 ## Overview
