@@ -121,14 +121,14 @@ oreilly-rag/
 - [x] Add difficulty level assessment
 - [x] Create question validation and quality checks
 
-### Step 9: Question Types and Templates
-- [ ] Create `services/question_templates.py`
-- [ ] Define question generation prompts
-- [ ] Implement concept-based questions
-- [ ] Add application-based questions
-- [ ] Create scenario-based questions
-- [ ] Implement code-based questions (for programming books)
-- [ ] Add explanation generation for answers
+### Step 9: Question Types and Templates ✅ COMPLETED
+- [x] Create `services/question_templates.py`
+- [x] Define question generation prompts
+- [x] Implement concept-based questions
+- [x] Add application-based questions
+- [x] Create scenario-based questions
+- [x] Implement code-based questions (for programming books)
+- [x] Add explanation generation for answers
 
 ### Step 10: Quiz Management Service
 - [ ] Create `services/quiz_manager.py`
