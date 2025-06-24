@@ -150,14 +150,14 @@ oreilly-rag/
 
 ## Phase 4: Backend API Development (Steps 12-15)
 
-### Step 12: Quiz API Endpoints
-- [ ] Create `api/quizzes.py`
-- [ ] Implement POST `/quizzes/generate` endpoint
-- [ ] Add GET `/quizzes/{quiz_id}` endpoint
-- [ ] Create POST `/quizzes/{quiz_id}/submit` endpoint
-- [ ] Add GET `/quizzes/user-progress` endpoint
-- [ ] Implement quiz customization endpoints
-- [ ] Add quiz sharing and export endpoints
+### Step 12: Quiz API Endpoints ✅ COMPLETED
+- [x] Create `api/quizzes.py`
+- [x] Implement POST `/quizzes/generate` endpoint
+- [x] Add GET `/quizzes/{quiz_id}` endpoint
+- [x] Create POST `/quizzes/{quiz_id}/submit` endpoint
+- [x] Add GET `/quizzes/user-progress` endpoint
+- [x] Implement quiz customization endpoints
+- [x] Add quiz sharing and export endpoints
 
 ### Step 13: Learning API Endpoints
 - [ ] Create `api/learning.py`
