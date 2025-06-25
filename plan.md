@@ -159,14 +159,14 @@ oreilly-rag/
 - [x] Implement quiz customization endpoints
 - [x] Add quiz sharing and export endpoints
 
-### Step 13: Learning API Endpoints
-- [ ] Create `api/learning.py`
-- [ ] Implement GET `/topics` endpoint
-- [ ] Add GET `/difficulty-levels` endpoint
-- [ ] Create POST `/study-sessions` endpoint
-- [ ] Add GET `/learning-recommendations` endpoint
-- [ ] Implement progress tracking endpoints
-- [ ] Add mastery assessment endpoints
+### Step 13: Learning API Endpoints ✅ COMPLETED
+- [x] Create `api/learning.py`
+- [x] Implement GET `/topics` endpoint
+- [x] Add GET `/difficulty-levels` endpoint
+- [x] Create POST `/study-sessions` endpoint
+- [x] Add GET `/learning-recommendations` endpoint
+- [x] Implement progress tracking endpoints
+- [x] Add mastery assessment endpoints
 
 ### Step 14: User Management API
 - [ ] Create `api/users.py`
