@@ -168,14 +168,14 @@ oreilly-rag/
 - [x] Implement progress tracking endpoints
 - [x] Add mastery assessment endpoints
 
-### Step 14: User Management API
-- [ ] Create `api/users.py`
-- [ ] Implement user registration and authentication
-- [ ] Add user profile management
-- [ ] Create learning preferences endpoints
-- [ ] Add study history tracking
-- [ ] Implement achievement system
-- [ ] Add social features (optional)
+### Step 14: User Management API ✅ COMPLETED
+- [x] Create `api/users.py`
+- [x] Implement user registration and authentication
+- [x] Add user profile management
+- [x] Create learning preferences endpoints
+- [x] Add study history tracking
+- [x] Implement achievement system
+- [x] Add social features (following, leaderboards)
 
 ### Step 15: Analytics API Endpoints
 - [ ] Create `api/analytics.py`

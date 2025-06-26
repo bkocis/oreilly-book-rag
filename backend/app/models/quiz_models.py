@@ -66,7 +66,7 @@ class QuizSession(Base):
     questions_data = Column(JSON)  # Generated questions for this session
     
     # Additional data
-    metadata = Column(JSON, default=dict)
+    extra_data = Column(JSON, default=dict)
     
     # Relationships
     quiz = relationship("Quiz", back_populates="sessions")
@@ -95,7 +95,7 @@ class UserResponse(Base):
     attempted_at = Column(DateTime, default=datetime.utcnow)
     
     # Additional data
-    metadata = Column(JSON, default=dict)
+    extra_data = Column(JSON, default=dict)
     
     # Relationships
     session = relationship("QuizSession", back_populates="responses")
@@ -158,4 +158,206 @@ class UserProgress(Base):
     last_updated = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     # Additional data
-    metadata = Column(JSON, default=dict) 
+    extra_data = Column(JSON, default=dict)
+
+
+# New User Management Models
+
+class User(Base):
+    """Model for user accounts and basic information."""
+    __tablename__ = "users"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    username = Column(String, unique=True, nullable=False)
+    email = Column(String, unique=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
+    
+    # Profile information
+    first_name = Column(String)
+    last_name = Column(String)
+    display_name = Column(String)
+    bio = Column(Text)
+    avatar_url = Column(String)
+    
+    # Account status
+    is_active = Column(Boolean, default=True)
+    is_verified = Column(Boolean, default=False)
+    email_verified = Column(Boolean, default=False)
+    
+    # Timestamps
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    last_login = Column(DateTime)
+    
+    # Relationships
+    preferences = relationship("UserPreferences", back_populates="user", uselist=False, cascade="all, delete-orphan")
+    achievements = relationship("UserAchievement", back_populates="user", cascade="all, delete-orphan")
+    study_sessions = relationship("StudySession", back_populates="user", cascade="all, delete-orphan")
+
+
+class UserPreferences(Base):
+    """Model for user learning preferences and settings."""
+    __tablename__ = "user_preferences"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(String, ForeignKey("users.id"), nullable=False)
+    
+    # Learning preferences
+    preferred_topics = Column(JSON, default=list)  # List of preferred topics
+    difficulty_preference = Column(String, default="adaptive")  # beginner, intermediate, advanced, adaptive
+    question_types_preference = Column(JSON, default=list)  # Preferred question types
+    daily_goal = Column(Integer, default=5)  # Questions per day
+    session_length = Column(Integer, default=20)  # Minutes per session
+    
+    # Notification preferences
+    email_notifications = Column(Boolean, default=True)
+    push_notifications = Column(Boolean, default=True)
+    reminder_frequency = Column(String, default="daily")  # daily, weekly, none
+    
+    # UI preferences
+    theme = Column(String, default="light")  # light, dark, auto
+    language = Column(String, default="en")
+    timezone = Column(String, default="UTC")
+    
+    # Privacy settings
+    profile_visibility = Column(String, default="public")  # public, friends, private
+    share_progress = Column(Boolean, default=True)
+    
+    # Timestamps
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    user = relationship("User", back_populates="preferences")
+
+
+class StudySession(Base):
+    """Model for tracking individual study sessions."""
+    __tablename__ = "study_sessions"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(String, ForeignKey("users.id"), nullable=False)
+    
+    # Session data
+    session_type = Column(String, default="quiz")  # quiz, review, practice
+    topics_covered = Column(JSON, default=list)
+    questions_answered = Column(Integer, default=0)
+    correct_answers = Column(Integer, default=0)
+    time_spent = Column(Integer, default=0)  # Seconds
+    
+    # Performance metrics
+    accuracy = Column(Float, default=0.0)  # Percentage
+    improvement = Column(Float, default=0.0)  # Compared to previous sessions
+    
+    # Timestamps
+    started_at = Column(DateTime, default=datetime.utcnow)
+    ended_at = Column(DateTime)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Additional data
+    extra_data = Column(JSON, default=dict)
+    
+    # Relationships
+    user = relationship("User", back_populates="study_sessions")
+
+
+class Achievement(Base):
+    """Model for defining available achievements."""
+    __tablename__ = "achievements"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    name = Column(String, nullable=False)
+    description = Column(Text, nullable=False)
+    category = Column(String, nullable=False)  # streak, mastery, social, milestone
+    icon_url = Column(String)
+    
+    # Requirements
+    requirement_type = Column(String, nullable=False)  # quiz_count, streak_days, accuracy, mastery_topics
+    requirement_value = Column(Integer, nullable=False)
+    requirement_conditions = Column(JSON, default=dict)  # Additional conditions
+    
+    # Reward
+    points = Column(Integer, default=0)
+    badge_color = Column(String, default="bronze")  # bronze, silver, gold, platinum
+    
+    # Status
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    user_achievements = relationship("UserAchievement", back_populates="achievement", cascade="all, delete-orphan")
+
+
+class UserAchievement(Base):
+    """Model for tracking user achievements and progress."""
+    __tablename__ = "user_achievements"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(String, ForeignKey("users.id"), nullable=False)
+    achievement_id = Column(String, ForeignKey("achievements.id"), nullable=False)
+    
+    # Progress tracking
+    progress = Column(Float, default=0.0)  # Percentage progress toward achievement
+    is_completed = Column(Boolean, default=False)
+    completed_at = Column(DateTime)
+    
+    # Metadata
+    extra_data = Column(JSON, default=dict)
+    
+    # Timestamps
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    user = relationship("User", back_populates="achievements")
+    achievement = relationship("Achievement", back_populates="user_achievements")
+
+
+class UserFollowing(Base):
+    """Model for social following relationships."""
+    __tablename__ = "user_following"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    follower_id = Column(String, ForeignKey("users.id"), nullable=False)
+    following_id = Column(String, ForeignKey("users.id"), nullable=False)
+    
+    # Status
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Relationships - Note: These would create circular references, so we'll handle them in queries
+    # follower = relationship("User", foreign_keys=[follower_id])
+    # following = relationship("User", foreign_keys=[following_id])
+
+
+class UserStats(Base):
+    """Model for caching user statistics and performance metrics."""
+    __tablename__ = "user_stats"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(String, ForeignKey("users.id"), nullable=False)
+    
+    # Overall statistics
+    total_quizzes_taken = Column(Integer, default=0)
+    total_questions_answered = Column(Integer, default=0)
+    total_correct_answers = Column(Integer, default=0)
+    total_time_spent = Column(Integer, default=0)  # Seconds
+    
+    # Performance metrics
+    overall_accuracy = Column(Float, default=0.0)
+    current_streak = Column(Integer, default=0)
+    longest_streak = Column(Integer, default=0)
+    total_points = Column(Integer, default=0)
+    
+    # Topic-based statistics
+    topic_stats = Column(JSON, default=dict)  # Performance by topic
+    difficulty_stats = Column(JSON, default=dict)  # Performance by difficulty
+    
+    # Time-based statistics
+    daily_stats = Column(JSON, default=dict)  # Daily activity
+    weekly_stats = Column(JSON, default=dict)  # Weekly activity
+    monthly_stats = Column(JSON, default=dict)  # Monthly activity
+    
+    # Timestamps
+    last_updated = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    last_activity = Column(DateTime, default=datetime.utcnow) 

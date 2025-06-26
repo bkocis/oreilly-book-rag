@@ -43,6 +43,9 @@ class Settings(BaseSettings):
     openai_api_key: str = ""
     llm_model: str = "gpt-3.5-turbo"
     
+    # Authentication
+    secret_key: str = "your-secret-key-change-in-production"  # Change this in production
+    
     # Quiz Generation
     max_questions_per_quiz: int = 20
     default_difficulty_level: str = "medium"
