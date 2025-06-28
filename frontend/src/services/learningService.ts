@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = 'http://localhost:8000/api/v1';
 
 export interface Topic {
   id: string;
@@ -57,43 +57,43 @@ export class LearningService {
 
   // Get available topics
   async getTopics(): Promise<Topic[]> {
-    const response = await this.api.get('/topics');
+    const response = await this.api.get('/learning/topics');
     return response.data;
   }
 
   // Get difficulty levels
   async getDifficultyLevels(): Promise<string[]> {
-    const response = await this.api.get('/difficulty-levels');
+    const response = await this.api.get('/learning/difficulty-levels');
     return response.data;
   }
 
   // Get learning progress for current user
-  async getLearningProgress(): Promise<LearningProgress> {
-    const response = await this.api.get('/learning/progress');
+  async getLearningProgress(userId: string): Promise<LearningProgress> {
+    const response = await this.api.get(`/learning/progress/${userId}`);
     return response.data;
   }
 
   // Get study recommendations
-  async getStudyRecommendations(): Promise<StudyRecommendation[]> {
-    const response = await this.api.get('/learning/recommendations');
+  async getStudyRecommendations(userId: string): Promise<StudyRecommendation[]> {
+    const response = await this.api.get(`/learning/recommendations/${userId}`);
     return response.data;
   }
 
   // Create a study session
-  async createStudySession(customization: QuizCustomization): Promise<{ session_id: string }> {
-    const response = await this.api.post('/study-sessions', customization);
+  async createStudySession(customization: QuizCustomization & { user_id: string }): Promise<{ session_id: string }> {
+    const response = await this.api.post('/learning/study-sessions', customization);
     return response.data;
   }
 
   // Get user achievements
-  async getAchievements(): Promise<Achievement[]> {
-    const response = await this.api.get('/learning/achievements');
+  async getAchievements(userId: string): Promise<Achievement[]> {
+    const response = await this.api.get(`/users/${userId}/achievements`);
     return response.data;
   }
 
   // Get learning analytics
-  async getLearningAnalytics(): Promise<any> {
-    const response = await this.api.get('/analytics/learning');
+  async getLearningAnalytics(userId: string): Promise<any> {
+    const response = await this.api.get(`/analytics/performance/${userId}`);
     return response.data;
   }
 }

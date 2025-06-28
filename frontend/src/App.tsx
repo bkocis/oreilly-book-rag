@@ -4,6 +4,7 @@ import { HomePage } from './pages/HomePage';
 import { QuizPage } from './pages/QuizPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { Layout } from './components/Layout';
+import ApiTestComponent from './components/ApiTestComponent';
 import './App.css';
 
 // Create a client
@@ -25,6 +26,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/quiz/:id?" element={<QuizPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/api-test" element={<ApiTestComponent />} />
           </Routes>
         </Layout>
       </Router>

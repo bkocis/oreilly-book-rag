@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { Quiz, QuizSession, QuizResult } from '../types/quiz';
 
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = 'http://localhost:8000/api/v1';
 
 export class QuizService {
   private api = axios.create({
@@ -30,13 +30,13 @@ export class QuizService {
 
   // Start a new quiz session
   async startQuizSession(quizId: string): Promise<QuizSession> {
-    const response = await this.api.post(`/quizzes/${quizId}/start`);
+    const response = await this.api.post(`/quizzes/sessions`, { quiz_id: quizId });
     return response.data;
   }
 
   // Submit an answer for a question
   async submitAnswer(sessionId: string, questionId: string, answer: string | number): Promise<void> {
-    await this.api.post(`/quiz-sessions/${sessionId}/answer`, {
+    await this.api.post(`/quizzes/${sessionId}/submit`, {
       question_id: questionId,
       answer: answer,
     });
@@ -44,25 +44,25 @@ export class QuizService {
 
   // Complete a quiz session and get results
   async completeQuiz(sessionId: string): Promise<QuizResult> {
-    const response = await this.api.post(`/quiz-sessions/${sessionId}/complete`);
+    const response = await this.api.post(`/quizzes/${sessionId}/complete`);
     return response.data;
   }
 
   // Get quiz session details
   async getQuizSession(sessionId: string): Promise<QuizSession> {
-    const response = await this.api.get(`/quiz-sessions/${sessionId}`);
+    const response = await this.api.get(`/quizzes/sessions/${sessionId}`);
     return response.data;
   }
 
   // Get available topics
   async getTopics(): Promise<string[]> {
-    const response = await this.api.get('/topics');
+    const response = await this.api.get('/learning/topics');
     return response.data;
   }
 
   // Get user's quiz progress
-  async getUserProgress(): Promise<any> {
-    const response = await this.api.get('/quizzes/user-progress');
+  async getUserProgress(userId: string): Promise<any> {
+    const response = await this.api.get(`/quizzes/user-progress/${userId}`);
     return response.data;
   }
 }
